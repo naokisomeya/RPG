@@ -130,19 +130,9 @@ class Enemy
   }
 }
 
-//省略
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 敵クラス
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-class Enemy
-{
-  //省略
-}
 
-// ========== ここから追加する ==========
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// トロルクラス
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
 class Troll extends Enemy
 {
   // コンストラクタ
@@ -176,6 +166,45 @@ class Troll extends Enemy
   }
 }
 
+class Dragon extends Enemy
+{
+  // コンストラクター
+  constructor(name, hp, offense, speed, path)
+  {
+    super(name, hp, offense, speed, path);
+  }
+
+  // 攻撃メソッド
+  attack()
+  {
+    // 一定の確率で攻撃をミスする
+    if(getRandomIntInclusive(0, 4) === 4) {
+      Message.printMessage("ドラゴンは<br>グフッグフッと咳き込んでいる・・・<br>");
+      return;
+    }
+
+    // 生存している味方をランダムに選択する
+    let f = characters[searchLivedcharacterRamdom("friend")];
+
+    // 攻撃対象の体力から、自分の攻撃力を引く
+    f.hp -= this.offense;
+
+    // 攻撃相手の体力がマイナスになる場合は0にする
+    if(f.hp < 0) {
+      f.hp = 0;
+    }
+
+    // 攻撃相手が生存していれば攻撃
+    if(f.liveFlag) {	
+      Message.printMessage(this.name + "は炎を吹いた<br>" +
+                           f.name + "は" + this.offense + "のダメージを受けた！<br>");
+    }
+    else {
+      Message.printMessage(this.name + "の攻撃・・・<br>" + f.name + "は倒れている<br>");
+    }
+  }
+}
+
 class Message
 {
   // メッセージを表示する
@@ -189,6 +218,51 @@ class Message
   {
     messageView.innerHTML += text;
   }
+}
+
+function isAliveByType(type){
+  for(let c of characters){
+    if(c.type === type && c.liveFlag === true){
+      return true;
+    }
+  }
+  return false;
+}
+
+function searchCharacterByName(name)
+{
+
+  let characterElementNum = [];
+
+
+  let i = 0;
+  for(let c of characters) {
+    if(c.name === name) {
+      characterElementNum.push(i);
+    }
+    ++i;
+  }
+
+  return characterElementNum;
+}
+
+function searchLivedcharacterRamdom(type)
+{
+  // 生存しているキャラクターを探して、その要素番号を配列に詰める
+  let livedcharacter = searchLivedcharacterByType(type)
+	
+  // 生存しているキャラクターのなかからランダムで1人選ぶ
+  let randomValue = getRandomIntInclusive(0, livedcharacter.length - 1);
+
+  return livedcharacter[randomValue];
+}
+
+
+function getRandomIntInclusive(min, max)
+{
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 Message.printMessage("あれすの攻撃<br>");
