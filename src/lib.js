@@ -205,6 +205,25 @@ class Dragon extends Enemy
   }
 }
 
+class GameManage
+{
+  // コンストラクタ
+  constructor()
+  {
+    // 行動の順番を決める
+    this.actionOrder();
+
+    // パラメータを表示する
+    this.showParameter();
+
+    // 敵の画像を表示する
+    this.showEnemyImage();
+
+    // はじめのメッセージを表示する
+    this.showFirstMessage();
+  }
+}
+
 class Message
 {
   // メッセージを表示する
